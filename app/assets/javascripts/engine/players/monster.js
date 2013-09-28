@@ -1,5 +1,5 @@
-function Monster() {
-
+function Monster(name) {
+	this.name = name;
 }
 
 Monster.prototype = new Player();

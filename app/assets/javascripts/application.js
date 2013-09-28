@@ -17,6 +17,9 @@
 
 /* this is the list of the order of files for dependencies! */
 
+/* MESSAGES */
+//= require engine/messages/currentTurn.js
+
 /* PLAYERS */
 //= require engine/players/player.js
 //= require engine/players/monster.js

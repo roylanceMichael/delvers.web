@@ -30,6 +30,19 @@ test("game accepts 3 players", function () {
 	ok(game.getPlayers().length == 3, "should have had 3 players");
 });
 
+test("game doesn't start when names aren't unique", function() {
+	var game = new Game();
+	var warrior = new Warrior();
+	var monster1 = new Monster();
+	var monster2 = new Monster();
+	game.addPlayer(monster1);
+	game.addPlayer(monster2);
+	game.addPlayer(warrior);
+	game.startGame();
+
+	ok(game.isStarted() == false, "game should have started");
+});
+
 test("game start", function() {
 	var game = buildGameWithOneWarriorOneMonster();
 	game.startGame();
@@ -45,10 +58,4 @@ test("game cannot start when less than 2 players", function() {
 test("game current turn returns null when not started", function() {
 	var game = buildGameWithOneWarriorOneMonster();
 	ok(game.currentTurn() == null, "game should have returned null because it is not started");
-});
-
-test("game current turn returns player when started", function() {
-	var game = buildGameWithOneWarriorOneMonster();
-	game.startGame();
-	ok(game.currentTurn() == game.getPlayers()[0], "game should have returned first player");
 });
