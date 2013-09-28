@@ -29,3 +29,26 @@ test("game accepts 3 players", function () {
 	game.addPlayer(warrior);
 	ok(game.getPlayers().length == 3, "should have had 3 players");
 });
+
+test("game start", function() {
+	var game = buildGameWithOneWarriorOneMonster();
+	game.startGame();
+	ok(game.isStarted() == true, "game should have started");
+});
+
+test("game cannot start when less than 2 players", function() {
+	var game = new Game();
+	game.startGame();
+	ok(game.isStarted() == false, "game should not have started");
+});
+
+test("game current turn returns null when not started", function() {
+	var game = buildGameWithOneWarriorOneMonster();
+	ok(game.currentTurn() == null, "game should have returned null because it is not started");
+});
+
+test("game current turn returns player when started", function() {
+	var game = buildGameWithOneWarriorOneMonster();
+	game.startGame();
+	ok(game.currentTurn() == game.getPlayers()[0], "game should have returned first player");
+});
