@@ -7,7 +7,5 @@ test("initial player starts with an action of discard", function() {
 
 	strictEqual(actualTurn.playerName, expectedTurn.playerName, "should have been the first players turn");
 	strictEqual(actualTurn.currentAction, expectedTurn.currentAction, "should have been the first players turn");
-
-	game.takeTurn();
 });
 

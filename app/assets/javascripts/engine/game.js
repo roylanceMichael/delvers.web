@@ -16,7 +16,7 @@ Game.prototype = {
 
 	startGame: function() {
 		// we require unique names for all
-		var nameHolder = {};
+		var nameHolder = { };
 		for(var i = 0; i < this.players.length; i++) {
 			
 			if(nameHolder[this.players[i].name] != undefined) {
@@ -47,7 +47,7 @@ Game.prototype = {
 		if(this.started == false) {
 			return null;
 		}
-		
+
 		var currentPlayerName = this.players[this.currentPlayer].name;
 
 		return new CurrentTurn(currentPlayerName, this.currentAction);
@@ -59,6 +59,8 @@ Game.prototype = {
 		if(discardParameters == null) {
 			return;
 		}
+
+		
 	},
 
 	takeTurn: function() {
