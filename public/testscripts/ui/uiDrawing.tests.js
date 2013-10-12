@@ -11,6 +11,16 @@ test("uiDrawing initCanvas", function(){
 	strictEqual(uiDrawing.width, canvas.width);
 });
 
+test("uiDrawing calculateGridTilePosition 0 0", function(){
+	var canvas = document.createElement("canvas");
+
+	var uiDrawing = new UiDrawing(canvas);
+	var position = uiDrawing.calculatePosition("top");
+	
+	strictEqual(position.horizontalPos, (uiDrawing.width / 2) - (uiDrawing.imageWidth / 2));
+	strictEqual(position.verticalPos, 10);
+});
+
 test("uiDrawing calculatePosition top", function(){
 	var canvas = document.createElement("canvas");
 
@@ -49,6 +59,20 @@ test("uiDrawing drawImage bottom main", function(){
 });
 
 test("uiDrawing drawImage top main", function(){
+	var canvas = document.createElement("canvas");
+	var uiDrawing = new UiDrawing(canvas);
+	uiDrawing.initCanvas();
+	uiDrawing.drawImage(dwarfImageLoc, "top", true);
+
+	strictEqual(uiDrawing.bottomImages.length, 0);
+	strictEqual(uiDrawing.topImages.length, 1);
+	ok(uiDrawing.topImages[0].img.src.indexOf(dwarfImageLoc) >= 0);
+	// frankly, I just want to make sure it's an integer
+	ok(uiDrawing.topImages[0].horizontalPos >= 0);
+	ok(uiDrawing.topImages[0].verticalPos >= 0);
+});
+
+test("uiDrawing drawImage 2 top", function(){
 	var canvas = document.createElement("canvas");
 	var uiDrawing = new UiDrawing(canvas);
 	uiDrawing.initCanvas();
