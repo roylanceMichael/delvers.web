@@ -21,4 +21,7 @@ $(document).ready(function(){
 		gameDisplayRow.appendChild(canvas);
 		gameDisplayRow.appendChild(tileCanvas);
 	}
+
+	var mainViewModel = new MainViewModel(uiDrawing);
+	ko.applyBindings(mainViewModel);
 });
