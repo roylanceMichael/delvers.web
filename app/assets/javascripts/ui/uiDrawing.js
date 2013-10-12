@@ -1,91 +1,128 @@
-function UiDrawing(canvas) {
+function UiDrawing(canvas, tileCanvas) {
 	this.height = 500;
 	this.width = 800;
+
+	this.tileImg = null;
+	this.tileLocation = "/assets/Tile.jpg";
+	
+	this.chunkSize = 6;
+	this.horizontalChunkSize = (this.width / this.chunkSize);
+	this.verticalChunkSize = (this.height / this.chunkSize);
 
 	this.imageHeight = 10;
 	this.imageWidth = 10;
 
-	this.canvas = canvas;
-	this.ctx = canvas.getContext("2d");
+	this.imageTileMarginWidth = this.horizontalChunkSize / 3;
+	this.imageTileMarginHeight = this.verticalChunkSize / 4;
 
-	this.topImages = [];
-	this.bottomImages = [];
+	this.canvas = canvas;
+	this.ctx = this.canvas.getContext("2d");
+
+	this.tileCanvas = tileCanvas;
+	this.tileCtx = this.tileCanvas.getContext("2d");
+
+	this.gridObjects = {};
+	this.cachedImages = {};
 }
 
 UiDrawing.prototype = {
 	// setup canvas element
 	initCanvas: function() {
-		this.topImages = [];
-		this.bottomImages = [];
+		var self = this;
+
+		this.gridObjects = {};
 
 		this.canvas.setAttribute('height', this.height);
 		this.canvas.setAttribute('width', this.width);
 
-		this.ctx.strokeRect(0, 0, this.width, this.height);
+		this.tileCanvas.setAttribute('height', this.height);
+		this.tileCanvas.setAttribute('width', this.width);
 
-		this.createGridDrawing("small");
+		// setup the tile image at the beginning
+		if(this.tileImg == null) {
+			this.tileImg = new Image();
+
+			this.tileImg.onload = function() {
+				self.drawTiles();
+			}
+
+			this.tileImg.src = this.tileLocation;
+		}
 	},
 
-	createGridDrawing: function(size) {
-		// let's just start out with 5x5
-		var heightChunk = (this.height / 5);
-		var widthChunk = (this.width / 5);
+	// checks whether we have finished initialization
+	finishedInit: function() {
+		return this.tileImg != null;
+	},
 
-		// create vertical lines
-		for(var y = 0; y < this.height; y = y + heightChunk) {
-			this.ctx.moveTo(0, y);
-			this.ctx.lineTo(this.width, y);
+	drawTiles: function() {
+		// we need initialization to finish
+		if(!this.finishedInit()) {
+			return;
 		}
 
-		// create horizontal lines
-		for(var x = 0; x < this.width; x = x + widthChunk) {
-			this.ctx.moveTo(x, 0);
-			this.ctx.lineTo(x, this.width);
+		// manually set the first chunk(s) to be the image
+		this.tileCtx.drawImage(this.tileImg, 0, 0, this.horizontalChunkSize, this.verticalChunkSize);
+
+		for(var x = 1; x < this.width; x = x + this.horizontalChunkSize) {
+			for(var y = 1; y < this.height; y = y + this.verticalChunkSize) {
+				// http://stackoverflow.com/questions/5642383/copy-imagedata-by-value-in-javascript - thank you!
+				var dst = this.tileCtx.getImageData(0, 0, this.horizontalChunkSize, this.verticalChunkSize);
+				this.tileCtx.putImageData(dst, x, y);
+			}
 		}
-
-		this.ctx.strokeStyle = "#eee";
-		this.ctx.stroke();
 	},
 
-	imgPosTuple: function(img, horizontalPos, verticalPos) {
-		return { "img": img, "horizontalPos": horizontalPos, "verticalPos": verticalPos };
+	// get's coordinates for the given tiles (0, 0), (0, 1)... (n, n)
+	getGridTilePosition: function(x, y) {
+		return { 
+			"horizontalPos": (x * this.horizontalChunkSize), 
+			"verticalPos": (y * this.verticalChunkSize) 
+		};
 	},
 
-	calculatePosition: function(canvasLocation) {
-		// let's rethink this... i want to calculate a total of 10 players on each side
-		// i have a width of 500..., with each image occupying 10s
+	drawImageOnGrid: function(imageLocation, x, y) {
+		var img;
+		var self = this;
 
-		var horizontalPos = (this.width / 2) - (this.imageWidth);
-		var verticalPos = 10;
-
-		if(canvasLocation == "bottom") {
-			verticalPos = this.height - (6 * this.imageHeight);
+		if(this.cachedImages[imageLocation] != undefined) {
+			img = this.cachedImages[imageLocation];
 		}
-
-		return { "horizontalPos": horizontalPos, "verticalPos": verticalPos };
-	},
-
-	drawImage: function(imageLocation, canvasLocation) {
-		var img = new Image();
+		else {
+			img = new Image();
+			this.cachedImages[imageLocation] = img;
+		}
 
 		img.width = this.imageWidth;
 		img.height = this.imageHeight;
 
-		var pos = this.calculatePosition(canvasLocation);
-		var tuple = this.imgPosTuple(img, pos.horizontalPos, pos.verticalPos);
+		var pos = this.getGridTilePosition(x, y);
 
-		if(canvasLocation == "bottom") {
-			this.bottomImages.push(tuple);
-		} else {
-			this.topImages.push(tuple);
-		}
-
-		var currentCtx = this.ctx;
+		// set the key / image
+		this.gridObjects[x + "~" + y] = img;
 
 		img.onload = function() {
-			currentCtx.drawImage(tuple.img, tuple.horizontalPos, tuple.verticalPos);
+			self.ctx.drawImage(img, 
+				pos.horizontalPos + self.imageTileMarginWidth, 
+				pos.verticalPos + self.imageTileMarginHeight);
 		}
 
-		img.src = "/assets/Dwarf.png";
+		img.src = imageLocation;
+	},
+
+	removeImageOnGrid: function(x, y) {
+		var key = x + "~" + y;
+		if(this.gridObjects[key] != null) {
+			// clean up
+			delete this.gridObjects[key];
+		}
+
+		var gridPos = this.getGridTilePosition(x, y);
+		
+		this.ctx.clearRect(
+			gridPos.horizontalPos, 
+			gridPos.verticalPos,
+			this.horizontalChunkSize,
+			this.verticalChunkSize);
 	}
 };

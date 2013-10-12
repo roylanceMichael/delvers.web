@@ -1,87 +1,130 @@
 test("uiDrawing ctor", function(){
-	var uiDrawing = new UiDrawing(document.createElement("canvas"));
+	var canvas = document.createElement("canvas");
+	var tileCanvas = document.createElement("canvas");
+
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	ok(uiDrawing != null, "cannot instantiate uiDrawing!");
 });
 
 test("uiDrawing initCanvas", function(){
 	var canvas = document.createElement("canvas");
-	var uiDrawing = new UiDrawing(canvas);
+	var tileCanvas = document.createElement("canvas");
+	
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	uiDrawing.initCanvas();
 	strictEqual(uiDrawing.height, canvas.height);
 	strictEqual(uiDrawing.width, canvas.width);
 });
 
-test("uiDrawing calculateGridTilePosition 0 0", function(){
+test("uiDrawing initCanvas tile image exists", function(){
 	var canvas = document.createElement("canvas");
+	var tileCanvas = document.createElement("canvas");
 
-	var uiDrawing = new UiDrawing(canvas);
-	var position = uiDrawing.calculatePosition("top");
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	
-	strictEqual(position.horizontalPos, (uiDrawing.width / 2) - (uiDrawing.imageWidth / 2));
-	strictEqual(position.verticalPos, 10);
+	uiDrawing.initCanvas();
+
+	var stopWatch = new Date();
+
+	ok(uiDrawing.tileImg != null, "should pass locally, I'll come up with a better way to mock");
 });
 
-test("uiDrawing calculatePosition top", function(){
+test("uiDrawing getGridTilePosition 0 0", function(){
 	var canvas = document.createElement("canvas");
+	var tileCanvas = document.createElement("canvas");
 
-	var uiDrawing = new UiDrawing(canvas);
-	var position = uiDrawing.calculatePosition("top");
-	
-	strictEqual(position.horizontalPos, (uiDrawing.width / 2) - (uiDrawing.imageWidth / 2));
-	strictEqual(position.verticalPos, 10);
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	var position = uiDrawing.getGridTilePosition(0, 0);
+
+	strictEqual(position.verticalPos, 0);
+	strictEqual(position.horizontalPos, 0);
 });
 
-test("uiDrawing calculatePosition bottom", function(){
+test("uiDrawing getGridTilePosition 0 1", function(){
 	var canvas = document.createElement("canvas");
+	var tileCanvas = document.createElement("canvas");
 
-	var uiDrawing = new UiDrawing(canvas);
-	var position = uiDrawing.calculatePosition("bottom");
-	
-	strictEqual(position.horizontalPos, (uiDrawing.width / 2) - (uiDrawing.imageWidth / 2));
-	strictEqual(position.verticalPos, uiDrawing.height - 2 * uiDrawing.imageHeight);
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	var position = uiDrawing.getGridTilePosition(0, 1);
+
+	strictEqual(position.verticalPos, (uiDrawing.height / 6));
+	strictEqual(position.horizontalPos, 0);
+});
+
+test("uiDrawing getGridTilePosition 4 3", function(){
+	var canvas = document.createElement("canvas");
+	var tileCanvas = document.createElement("canvas");
+
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	var position = uiDrawing.getGridTilePosition(4, 3);
+
+	strictEqual(position.horizontalPos, 4 * (uiDrawing.width / 6));
+	strictEqual(position.verticalPos, 3 * (uiDrawing.height / 6));
 });
 
 // note: this is kind of integration testy in a way
 var dwarfImageLoc = "/assets/Dwarf.png";
 
-test("uiDrawing drawImage bottom main", function(){
+test("uiDrawing drawImageOnGrid 0 0", function(){
 	var canvas = document.createElement("canvas");
-	var uiDrawing = new UiDrawing(canvas);
-	uiDrawing.initCanvas();
-	uiDrawing.drawImage(dwarfImageLoc, "bottom", true);
+	var tileCanvas = document.createElement("canvas");
 
-	strictEqual(uiDrawing.bottomImages.length, 1);
-	ok(uiDrawing.bottomImages[0].img.src.indexOf(dwarfImageLoc) >= 0);
-	// frankly, I just want to make sure it's an integer
-	ok(uiDrawing.bottomImages[0].horizontalPos >= 0);
-	ok(uiDrawing.bottomImages[0].verticalPos >= 0);
-	strictEqual(uiDrawing.topImages.length, 0);
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	uiDrawing.initCanvas();
+	uiDrawing.drawImageOnGrid(dwarfImageLoc, 0, 0);
+
+	ok(uiDrawing.gridObjects["0~0"].src.indexOf(dwarfImageLoc) >= 0);
 });
 
-test("uiDrawing drawImage top main", function(){
+test("uiDrawing drawImageOnGrid 3 2", function(){
 	var canvas = document.createElement("canvas");
-	var uiDrawing = new UiDrawing(canvas);
-	uiDrawing.initCanvas();
-	uiDrawing.drawImage(dwarfImageLoc, "top", true);
+	var tileCanvas = document.createElement("canvas");
 
-	strictEqual(uiDrawing.bottomImages.length, 0);
-	strictEqual(uiDrawing.topImages.length, 1);
-	ok(uiDrawing.topImages[0].img.src.indexOf(dwarfImageLoc) >= 0);
-	// frankly, I just want to make sure it's an integer
-	ok(uiDrawing.topImages[0].horizontalPos >= 0);
-	ok(uiDrawing.topImages[0].verticalPos >= 0);
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	uiDrawing.initCanvas();
+	uiDrawing.drawImageOnGrid(dwarfImageLoc, 3, 2);
+
+	ok(uiDrawing.gridObjects["3~2"].src.indexOf(dwarfImageLoc) >= 0);
 });
 
-test("uiDrawing drawImage 2 top", function(){
+test("uiDrawing drawImageOnGrid 2 0 0 and 1 1", function(){
 	var canvas = document.createElement("canvas");
-	var uiDrawing = new UiDrawing(canvas);
-	uiDrawing.initCanvas();
-	uiDrawing.drawImage(dwarfImageLoc, "top", true);
+	var tileCanvas = document.createElement("canvas");
 
-	strictEqual(uiDrawing.bottomImages.length, 0);
-	strictEqual(uiDrawing.topImages.length, 1);
-	ok(uiDrawing.topImages[0].img.src.indexOf(dwarfImageLoc) >= 0);
-	// frankly, I just want to make sure it's an integer
-	ok(uiDrawing.topImages[0].horizontalPos >= 0);
-	ok(uiDrawing.topImages[0].verticalPos >= 0);
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	uiDrawing.initCanvas();
+	uiDrawing.drawImageOnGrid(dwarfImageLoc, 0, 0);
+
+	ok(uiDrawing.gridObjects["0~0"].src.indexOf(dwarfImageLoc) >= 0);
+	ok(uiDrawing.gridObjects["1~1"] == null);
+
+	uiDrawing.drawImageOnGrid(dwarfImageLoc, 1, 1);
+	
+	ok(uiDrawing.gridObjects["0~0"].src.indexOf(dwarfImageLoc) >= 0);
+	ok(uiDrawing.gridObjects["1~1"].src.indexOf(dwarfImageLoc) >= 0);
+});
+
+test("uiDrawing drawImageOnGrid cachedImage 0 0", function(){
+	var canvas = document.createElement("canvas");
+	var tileCanvas = document.createElement("canvas");
+
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	uiDrawing.initCanvas();
+	uiDrawing.drawImageOnGrid(dwarfImageLoc, 0, 0);
+
+	ok(uiDrawing.cachedImages[dwarfImageLoc] != null);
+});
+
+test("uiDrawing removeImageOnGrid 0 0", function(){
+	var canvas = document.createElement("canvas");
+	var tileCanvas = document.createElement("canvas");
+
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	uiDrawing.initCanvas();
+	uiDrawing.drawImageOnGrid(dwarfImageLoc, 0, 0);
+
+	ok(uiDrawing.cachedImages[dwarfImageLoc] != null);
+
+	uiDrawing.removeImageOnGrid(0, 0);
+	ok(uiDrawing.gridObjects["0~0"] == null);
 });
