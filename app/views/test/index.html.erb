@@ -3,8 +3,19 @@
 <div id="qunit-fixture"></div>
 <script src="/testscripts/qunit-1.12.0.js"></script>
 
+<!-- setup initial testing objects, such as utilities etc... -->
 <!-- test files -->
-<script src="/testscripts/utilities/utils.js"></script>
+<script src="/testscripts/utilities/utilities.test.js"></script>
+<script>
+	// set the autostart to false, we'll start when loaded in
+	QUnit.config.autostart = false;
+	
+	testUtils = new UtilitiesTest();
+	setTimeout(function() {
+		// start once loaded in
+		QUnit.start();
+	}, 1000);
+</script>
 
 <!-- player tests -->
 <script src="/testscripts/players/player.tests.js" ></script>
@@ -14,4 +25,6 @@
 <script src="/testscripts/game/game.takeTurn.tests.js" ></script>
 
 <!-- ui tests -->
+<script src="/testscripts/ui/imageAsset.tests.js"></script>
 <script src="/testscripts/ui/uiDrawing.tests.js"></script>
+<script src="/testscripts/ui/mainViewmodel.tests.js"></script>

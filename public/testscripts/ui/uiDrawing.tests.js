@@ -63,7 +63,9 @@ test("uiDrawing getGridTilePosition 4 3", function(){
 });
 
 // note: this is kind of integration testy in a way
-var dwarfImageLoc = "/assets/Dwarf.png";
+var dwarfName = testUtils.characters.dwarf.name;
+var dwarfLocation = testUtils.characters.dwarf.location;
+var dwarfImage = testUtils.characters.dwarf;
 
 test("uiDrawing drawImageOnGrid 0 0", function(){
 	var canvas = document.createElement("canvas");
@@ -71,9 +73,9 @@ test("uiDrawing drawImageOnGrid 0 0", function(){
 
 	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	uiDrawing.initCanvas();
-	uiDrawing.drawImageOnGrid(dwarfImageLoc, 0, 0);
+	uiDrawing.drawImageAssetOnGrid(dwarfImage, 0, 0);
 
-	ok(uiDrawing.gridObjects["0~0"].src.indexOf(dwarfImageLoc) >= 0);
+	ok(uiDrawing.gridObjects["0~0"].name == dwarfName);
 });
 
 test("uiDrawing drawImageOnGrid 3 2", function(){
@@ -82,9 +84,9 @@ test("uiDrawing drawImageOnGrid 3 2", function(){
 
 	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	uiDrawing.initCanvas();
-	uiDrawing.drawImageOnGrid(dwarfImageLoc, 3, 2);
+	uiDrawing.drawImageAssetOnGrid(dwarfImage, 3, 2);
 
-	ok(uiDrawing.gridObjects["3~2"].src.indexOf(dwarfImageLoc) >= 0);
+	ok(uiDrawing.gridObjects["3~2"].name == dwarfName);
 });
 
 test("uiDrawing drawImageOnGrid 2 0 0 and 1 1", function(){
@@ -93,26 +95,15 @@ test("uiDrawing drawImageOnGrid 2 0 0 and 1 1", function(){
 
 	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	uiDrawing.initCanvas();
-	uiDrawing.drawImageOnGrid(dwarfImageLoc, 0, 0);
+	uiDrawing.drawImageAssetOnGrid(dwarfImage, 0, 0);
 
-	ok(uiDrawing.gridObjects["0~0"].src.indexOf(dwarfImageLoc) >= 0);
+	ok(uiDrawing.gridObjects["0~0"].name == dwarfName);
 	ok(uiDrawing.gridObjects["1~1"] == null);
 
-	uiDrawing.drawImageOnGrid(dwarfImageLoc, 1, 1);
+	uiDrawing.drawImageAssetOnGrid(dwarfImage, 1, 1);
 	
-	ok(uiDrawing.gridObjects["0~0"].src.indexOf(dwarfImageLoc) >= 0);
-	ok(uiDrawing.gridObjects["1~1"].src.indexOf(dwarfImageLoc) >= 0);
-});
-
-test("uiDrawing drawImageOnGrid cachedImage 0 0", function(){
-	var canvas = document.createElement("canvas");
-	var tileCanvas = document.createElement("canvas");
-
-	var uiDrawing = new UiDrawing(canvas, tileCanvas);
-	uiDrawing.initCanvas();
-	uiDrawing.drawImageOnGrid(dwarfImageLoc, 0, 0);
-
-	ok(uiDrawing.cachedImages[dwarfImageLoc] != null);
+	ok(uiDrawing.gridObjects["0~0"].name == dwarfName);
+	ok(uiDrawing.gridObjects["1~1"].name == dwarfName);
 });
 
 test("uiDrawing removeImageOnGrid 0 0", function(){
@@ -121,9 +112,7 @@ test("uiDrawing removeImageOnGrid 0 0", function(){
 
 	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	uiDrawing.initCanvas();
-	uiDrawing.drawImageOnGrid(dwarfImageLoc, 0, 0);
-
-	ok(uiDrawing.cachedImages[dwarfImageLoc] != null);
+	uiDrawing.drawImageAssetOnGrid(dwarfImage, 0, 0);
 
 	uiDrawing.removeImageOnGrid(0, 0);
 	ok(uiDrawing.gridObjects["0~0"] == null);

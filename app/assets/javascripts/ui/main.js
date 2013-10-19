@@ -1,4 +1,9 @@
 $(document).ready(function(){
+	// don't do main if we're running tests... for now
+	if(window.location.href.indexOf("test") > 0){
+		return;
+	}
+
 	var canvas = document.createElement("canvas");
 	canvas.style.position = "absolute";
 	canvas.style.top = "0";
@@ -11,17 +16,20 @@ $(document).ready(function(){
 	tileCanvas.style.left = "0";
 	tileCanvas.style["z-index"] = "0";
 
-	var uiDrawing = new UiDrawing(canvas, tileCanvas);
-	uiDrawing.initCanvas();
-
-	uiDrawing.drawImageOnGrid("/assets/Dwarf.png", 3, 2);
-
 	var gameDisplayRow = document.getElementById("gameDisplayRow");
 	if(gameDisplayRow != null) {
 		gameDisplayRow.appendChild(canvas);
 		gameDisplayRow.appendChild(tileCanvas);
 	}
 
-	var mainViewModel = new MainViewModel(uiDrawing);
+	// create initial uiDrawing
+	var uiDrawing = new UiDrawing(canvas, tileCanvas);
+	uiDrawing.initCanvas();
+
+	// and the characters
+	var characters = new Characters();
+
+	// feed them to the mainViewModel
+	var mainViewModel = new MainViewModel(uiDrawing, characters);
 	ko.applyBindings(mainViewModel);
 });

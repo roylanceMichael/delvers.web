@@ -9,8 +9,8 @@ function UiDrawing(canvas, tileCanvas) {
 	this.horizontalChunkSize = (this.width / this.chunkSize);
 	this.verticalChunkSize = (this.height / this.chunkSize);
 
-	this.imageHeight = 10;
-	this.imageWidth = 10;
+	this.imageHeight = 40;
+	this.imageWidth = 40;
 
 	this.imageTileMarginWidth = this.horizontalChunkSize / 3;
 	this.imageTileMarginHeight = this.verticalChunkSize / 4;
@@ -81,33 +81,19 @@ UiDrawing.prototype = {
 		};
 	},
 
-	drawImageOnGrid: function(imageLocation, x, y) {
-		var img;
-		var self = this;
-
-		if(this.cachedImages[imageLocation] != undefined) {
-			img = this.cachedImages[imageLocation];
-		}
-		else {
-			img = new Image();
-			this.cachedImages[imageLocation] = img;
-		}
-
-		img.width = this.imageWidth;
-		img.height = this.imageHeight;
-
+	drawImageAssetOnGrid: function(imageAsset, x, y) {
+		// set the key / image
+		this.gridObjects[x + "~" + y] = imageAsset;
+		
+		// get the position on the canvas
 		var pos = this.getGridTilePosition(x, y);
 
-		// set the key / image
-		this.gridObjects[x + "~" + y] = img;
-
-		img.onload = function() {
-			self.ctx.drawImage(img, 
-				pos.horizontalPos + self.imageTileMarginWidth, 
-				pos.verticalPos + self.imageTileMarginHeight);
-		}
-
-		img.src = imageLocation;
+		// draw it with the api
+		this.ctx.drawImage(imageAsset.img, 
+			pos.horizontalPos + this.imageTileMarginWidth, 
+			pos.verticalPos + this.imageTileMarginHeight,
+			this.imageWidth,
+			this.imageHeight);
 	},
 
 	removeImageOnGrid: function(x, y) {

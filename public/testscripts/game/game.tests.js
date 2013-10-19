@@ -44,7 +44,7 @@ test("game doesn't start when names aren't unique", function() {
 });
 
 test("game start", function() {
-	var game = buildGameWithOneWarriorOneMonster();
+	var game = testUtils.buildGameWithOneWarriorOneMonster();
 	game.startGame();
 	ok(game.isStarted() == true, "game should have started");
 });
@@ -56,6 +56,6 @@ test("game cannot start when less than 2 players", function() {
 });
 
 test("game current turn returns null when not started", function() {
-	var game = buildGameWithOneWarriorOneMonster();
+	var game = testUtils.buildGameWithOneWarriorOneMonster();
 	ok(game.currentTurn() == null, "game should have returned null because it is not started");
 });
