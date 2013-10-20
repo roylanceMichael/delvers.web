@@ -22,6 +22,9 @@ $(document).ready(function(){
 		gameDisplayRow.appendChild(tileCanvas);
 	}
 
+	// create my ui utilities that I'll use later
+	var uiUtilities = new UiUtilities();
+
 	// create initial uiDrawing
 	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	uiDrawing.initCanvas();
@@ -31,5 +34,11 @@ $(document).ready(function(){
 
 	// feed them to the mainViewModel
 	var mainViewModel = new MainViewModel(uiDrawing, characters);
+
+	var characterDisplayId = "#characterDisplays";
+
+	// setup bindings for images and load to dom
+	uiUtilities.applyPlayerToMainViewModel(mainViewModel, characterDisplayId);
+
 	ko.applyBindings(mainViewModel);
 });

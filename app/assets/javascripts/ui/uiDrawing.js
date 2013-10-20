@@ -22,7 +22,6 @@ function UiDrawing(canvas, tileCanvas) {
 	this.tileCtx = this.tileCanvas.getContext("2d");
 
 	this.gridObjects = {};
-	this.cachedImages = {};
 }
 
 UiDrawing.prototype = {
@@ -48,6 +47,10 @@ UiDrawing.prototype = {
 
 			this.tileImg.src = this.tileLocation;
 		}
+	},
+
+	genGridKey: function(x, y) {
+		return x+"~"+y;
 	},
 
 	// checks whether we have finished initialization
@@ -83,7 +86,7 @@ UiDrawing.prototype = {
 
 	drawImageAssetOnGrid: function(imageAsset, x, y) {
 		// set the key / image
-		this.gridObjects[x + "~" + y] = imageAsset;
+		this.gridObjects[this.genGridKey(x, y)] = imageAsset;
 		
 		// get the position on the canvas
 		var pos = this.getGridTilePosition(x, y);
@@ -97,7 +100,7 @@ UiDrawing.prototype = {
 	},
 
 	removeImageOnGrid: function(x, y) {
-		var key = x + "~" + y;
+		var key = this.genGridKey(x, y);
 		if(this.gridObjects[key] != null) {
 			// clean up
 			delete this.gridObjects[key];
@@ -110,5 +113,21 @@ UiDrawing.prototype = {
 			gridPos.verticalPos,
 			this.horizontalChunkSize,
 			this.verticalChunkSize);
+	},
+
+	resetGrid: function() {
+		// reset gridObjects
+		this.gridObjects = { };
+
+		// clear entire grid
+		this.ctx.clearRect(
+			0, 
+			0,
+			this.width,
+			this.height);
+	},
+
+	isLocationOkToDraw: function(x, y) {
+		return !this.gridObjects.hasOwnProperty(this.genGridKey(x, y));
 	}
 };

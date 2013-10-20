@@ -75,7 +75,7 @@ test("uiDrawing drawImageOnGrid 0 0", function(){
 	uiDrawing.initCanvas();
 	uiDrawing.drawImageAssetOnGrid(dwarfImage, 0, 0);
 
-	ok(uiDrawing.gridObjects["0~0"].name == dwarfName);
+	ok(uiDrawing.gridObjects[uiDrawing.genGridKey(0, 0)].name == dwarfName);
 });
 
 test("uiDrawing drawImageOnGrid 3 2", function(){
@@ -86,7 +86,7 @@ test("uiDrawing drawImageOnGrid 3 2", function(){
 	uiDrawing.initCanvas();
 	uiDrawing.drawImageAssetOnGrid(dwarfImage, 3, 2);
 
-	ok(uiDrawing.gridObjects["3~2"].name == dwarfName);
+	ok(uiDrawing.gridObjects[uiDrawing.genGridKey(3, 2)].name == dwarfName);
 });
 
 test("uiDrawing drawImageOnGrid 2 0 0 and 1 1", function(){
@@ -97,13 +97,13 @@ test("uiDrawing drawImageOnGrid 2 0 0 and 1 1", function(){
 	uiDrawing.initCanvas();
 	uiDrawing.drawImageAssetOnGrid(dwarfImage, 0, 0);
 
-	ok(uiDrawing.gridObjects["0~0"].name == dwarfName);
-	ok(uiDrawing.gridObjects["1~1"] == null);
+	ok(uiDrawing.gridObjects[uiDrawing.genGridKey(0, 0)].name == dwarfName);
+	ok(uiDrawing.gridObjects[uiDrawing.genGridKey(1, 1)] == null);
 
 	uiDrawing.drawImageAssetOnGrid(dwarfImage, 1, 1);
 	
-	ok(uiDrawing.gridObjects["0~0"].name == dwarfName);
-	ok(uiDrawing.gridObjects["1~1"].name == dwarfName);
+	ok(uiDrawing.gridObjects[uiDrawing.genGridKey(0, 0)].name == dwarfName);
+	ok(uiDrawing.gridObjects[uiDrawing.genGridKey(1, 1)].name == dwarfName);
 });
 
 test("uiDrawing removeImageOnGrid 0 0", function(){
@@ -115,5 +115,17 @@ test("uiDrawing removeImageOnGrid 0 0", function(){
 	uiDrawing.drawImageAssetOnGrid(dwarfImage, 0, 0);
 
 	uiDrawing.removeImageOnGrid(0, 0);
-	ok(uiDrawing.gridObjects["0~0"] == null);
+	ok(uiDrawing.gridObjects[uiDrawing.genGridKey(0, 0)] == null);
+});
+
+test("uiDrawing isLocationOkToDraw", function() {
+	var uiDrawing = testUtils.uiDrawing;
+
+	uiDrawing.resetGrid();
+
+	uiDrawing.drawImageAssetOnGrid(dwarfImage, 0, 0);
+
+	var actualResult = uiDrawing.isLocationOkToDraw(0, 0);
+
+	ok(actualResult == false);
 });

@@ -3,6 +3,7 @@ function ImageAsset(name, location) {
 	self.name = name;
 	self.location = location;
 	self.img = new Image();
+	self.id = "imgAsset" + self.name;
 	self.isLoaded = false;
 	
 	self.img.onload = function() {
