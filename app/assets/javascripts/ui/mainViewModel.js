@@ -1,11 +1,23 @@
-function MainViewModel(uiDrawing, characters) {
+function MainViewModel(uiDrawing, uiUtilities, characters) {
 	this.uiDrawing = uiDrawing;
+	this.uiUtilities = uiUtilities;
 	this.characters = characters;
 	this.currentPlayers = [];
 	this.currentMonsters = [];
 }
 
 MainViewModel.prototype = {
+	applyPlayerToMainViewModel: function(idToAppend) {
+		var characters = this.characters;
+		
+		this.uiUtilities.handleCharacters(characters.archer, idToAppend, this);
+		this.uiUtilities.handleCharacters(characters.cleric, idToAppend, this);
+		this.uiUtilities.handleCharacters(characters.paladin, idToAppend, this);
+		this.uiUtilities.handleCharacters(characters.thief, idToAppend, this);
+		this.uiUtilities.handleCharacters(characters.wizard, idToAppend, this);
+		this.uiUtilities.handleCharacters(characters.warrior, idToAppend, this);
+	}, 
+	
 	containsPlayer: function(player) {
 		for(var i = 0; i < this.currentPlayers.length; i++) {
 			if(this.currentPlayers[i].name == player.name) {

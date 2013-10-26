@@ -36,6 +36,5 @@
 //= require ui/imageAsset.js
 //= require ui/characters.js
 //= require ui/uiDrawing.js
-//= require ui/mainViewModel.js
 //= require ui/uiUtilities.js
-//= require ui/main.js
+//= require ui/mainViewModel.js

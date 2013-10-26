@@ -10,6 +10,8 @@ function UtilitiesTest() {
 	var uiDrawing = new UiDrawing(canvas, tileCanvas);
 	uiDrawing.initCanvas();
 	this.uiDrawing = uiDrawing; 
+	// assuming ko and $ exist already
+	this.uiUtilities = new UiUtilities(ko, $);
 }
 
 UtilitiesTest.prototype = {

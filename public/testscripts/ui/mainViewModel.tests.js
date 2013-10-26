@@ -6,7 +6,7 @@ test("mainViewModel ctor", function(){
 });
 
 test("mainViewModel add player to board", function(){
-	var viewModel = new MainViewModel(testUtils.uiDrawing, testUtils.characters);
+	var viewModel = new MainViewModel(testUtils.uiDrawing, testUtils.uiUtilities, testUtils.characters);
 
 	// get a player
 	var player = viewModel.characters.archer;
@@ -19,7 +19,7 @@ test("mainViewModel add player to board", function(){
 });
 
 test("mainViewModel cannot add player to board multiple times", function(){
-	var viewModel = new MainViewModel(testUtils.uiDrawing, testUtils.characters);
+	var viewModel = new MainViewModel(testUtils.uiDrawing, testUtils.uiUtilities, testUtils.characters);
 
 	// get a player
 	var player = viewModel.characters.archer;
@@ -37,7 +37,7 @@ test("mainViewModel cannot add player to board multiple times", function(){
 });
 
 test("mainViewModel adds player to next location when current location is full", function(){
-	var viewModel = new MainViewModel(testUtils.uiDrawing, testUtils.characters);
+	var viewModel = new MainViewModel(testUtils.uiDrawing, testUtils.uiUtilities, testUtils.characters);
 	var uiDrawing = viewModel.uiDrawing;
 
 	// get a player
