@@ -16,12 +16,15 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap.js
-//= require knockout-2.3.0.js
+//= require knockout-3.0.0.js
 
 /* this is the list of the order of files for dependencies! */
 
-/* MESSAGES */
+/* SERVICES/MODELS */
 //= require engine/messages/currentTurn.js
+//= require engine/services/targetRules/targetPlayers.js
+//= require engine/services/targetRules/targetHumans.js
+//= require engine/services/targetRules/targetMonsters.js
 
 /* PLAYERS */
 //= require engine/players/player.js
@@ -37,4 +40,5 @@
 //= require ui/characters.js
 //= require ui/uiDrawing.js
 //= require ui/uiUtilities.js
-//= require ui/mainViewModel.js
+//= require ui/viewModels/mainViewModel.js
+//= require ui/viewModels/combatViewModel.js

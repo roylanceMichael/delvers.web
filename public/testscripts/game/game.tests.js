@@ -57,5 +57,5 @@ test("game cannot start when less than 2 players", function() {
 
 test("game current turn returns null when not started", function() {
 	var game = testUtils.buildGameWithOneWarriorOneMonster();
-	ok(game.currentTurn() == null, "game should have returned null because it is not started");
+	ok(game.getCurrentTurn() == null, "game should have returned null because it is not started");
 });

@@ -3,6 +3,8 @@ DelversWeb::Application.routes.draw do
   # first created -> highest priority.
   
   match '/test/', :controller => 'test', :action => 'index'
+  match '/test/players', :controller => 'test', :action => 'players'
+  match '/test/services', :controller => 'test', :action => 'services'
   match '/game/', :controller => 'game', :action => 'index'
   match '/combat', :controller => 'combat', :action => 'index'
 

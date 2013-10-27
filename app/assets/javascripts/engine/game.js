@@ -1,8 +1,9 @@
 function Game() {
-	this.players = [];
-	this.currentPlayer = 0;
-	this.started = false;
+	this.actions = [ "discard", "draw", "move", "act", "cleanup" ];
 	this.currentAction = "";
+	this.currentPlayer = 0;
+	this.players = [];
+	this.started = false;
 };
 
 Game.prototype = {
@@ -29,7 +30,7 @@ Game.prototype = {
 		if(this.players.length > 1) {
 			this.started = true;
 			this.currentPlayer = 0;
-			this.currentAction = this.actions()[0];
+			this.currentAction = this.actions[0];
 		}
 	},
 
@@ -37,13 +38,7 @@ Game.prototype = {
 		return this.started;
 	},
 
-	actions: function() {
-		return [ "discard", "draw", "move", "act", "cleanup" ];
-	},
-
-	currentAction: this.currentAction,
-
-	currentTurn: function() {
+	getCurrentTurn: function() {
 		if(this.started == false) {
 			return null;
 		}
@@ -55,15 +50,32 @@ Game.prototype = {
 
 	/* functions around discarding */
 
-	discardTurn: function(discardParameters) {
+	discard: function(discardParameters) {
 		if(discardParameters == null) {
-			return;
+			return "parameters empty";
+		}
+
+		if(this.currentAction != this.actions[0]) {
+			return "current action not discard";
+		}
+
+		var player = this.players[this.currentPlayer];
+
+		if(player == null) {
+			return "error getting current player";
 		}
 
 		
+		
 	},
 
+	// draw turn
+	// move turn
+	// action turn
+	// cleanup turn
+
 	takeTurn: function() {
+		// cycle through each of the 
 		this.currentPlayer = ++this.currentPlayer % this.players.length;
 	}
 };

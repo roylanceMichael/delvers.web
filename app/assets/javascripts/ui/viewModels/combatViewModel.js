@@ -1,0 +1,7 @@
+function CombatViewModel() {
+
+}
+
+CombatViewModel.prototype = {
+
+};

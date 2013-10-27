@@ -1,5 +1,6 @@
 function HumanPlayer(name) {
-	this.name = name;
+	Player.call(this, name);
 }
 
-HumanPlayer.prototype = new Player();
+HumanPlayer.prototype = Object.create(Player.prototype);
+HumanPlayer.prototype.constructor = HumanPlayer;
