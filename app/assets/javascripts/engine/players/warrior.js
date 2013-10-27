@@ -1,5 +1,5 @@
 function Warrior(name) {
-	this.name = name;
+	HumanPlayer.call(this, name, 18);
 }
 
-Warrior.prototype = new HumanPlayer();
+Warrior.prototype = Object.create(HumanPlayer.prototype);

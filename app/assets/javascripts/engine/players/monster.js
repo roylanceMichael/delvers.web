@@ -1,5 +1,5 @@
 function Monster(name) {
-	Player.call(this, name);
+	Player.call(this, name, 6);
 }
 
 Monster.prototype = Object.create(Player.prototype);

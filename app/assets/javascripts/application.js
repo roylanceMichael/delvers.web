@@ -12,7 +12,6 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 
-
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap.js
@@ -21,7 +20,10 @@
 /* this is the list of the order of files for dependencies! */
 
 /* SERVICES/MODELS */
+//= require engine/cards/attackCard.js
 //= require engine/messages/currentTurn.js
+//= require engine/services/generateCards.js
+//= require engine/services/generateDamage.js
 //= require engine/services/targetRules/targetPlayers.js
 //= require engine/services/targetRules/targetHumans.js
 //= require engine/services/targetRules/targetMonsters.js
