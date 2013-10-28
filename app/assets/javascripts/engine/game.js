@@ -15,19 +15,22 @@ Game.prototype = {
 		return this.players;
 	},
 
-	startGame: function() {
-		// we require unique names for all
+	canStartGame: function() {
 		var nameHolder = { };
 		for(var i = 0; i < this.players.length; i++) {
 			
 			if(nameHolder[this.players[i].name] != undefined) {
-				return;
+				return false;
 			}
 
 			nameHolder[this.players[i].name] = 0;
 		}
 
-		if(this.players.length > 1) {
+		return this.players.length > 1;
+	},
+
+	startGame: function() {
+		if(this.canStartGame()) {
 			this.started = true;
 			this.currentPlayer = 0;
 			this.currentAction = this.actions[0];
@@ -64,9 +67,6 @@ Game.prototype = {
 		if(player == null) {
 			return "error getting current player";
 		}
-
-		
-		
 	},
 
 	// draw turn
