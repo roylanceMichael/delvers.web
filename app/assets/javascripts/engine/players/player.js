@@ -69,7 +69,7 @@ Player.prototype = {
 		return null;
 	},
 
-	useCard: function(card) {
+	discardCard: function(card) {
 		// I want to make sure it exists in our cards in hand
 		var foundCardIdx = -1;
 		for(var i = 0; i < this.cardsInHand.length; i++) {
@@ -83,7 +83,16 @@ Player.prototype = {
 		if(foundCardIdx > -1) {
 			var discardedCard = this.cardsInHand.splice(foundCardIdx, 1)[0];
 			this.discardedCards.push(discardedCard);
-			discardedCard.use();
+			return discardedCard;
+		}
+
+		return null;
+	},
+
+	useCard: function(card) {
+		var card = this.discardCard(card);
+		if(card != null) {
+			card.use();
 		}
 	}
 };

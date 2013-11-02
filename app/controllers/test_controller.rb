@@ -7,4 +7,8 @@ class TestController < ApplicationController
 
 	def services
 	end
+
+	def game
+		
+	end
 end

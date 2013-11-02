@@ -5,6 +5,7 @@ DelversWeb::Application.routes.draw do
   match '/test/', :controller => 'test', :action => 'index'
   match '/test/players', :controller => 'test', :action => 'players'
   match '/test/services', :controller => 'test', :action => 'services'
+  match '/test/game', :controller => 'test', :action => 'game'
   match '/game/', :controller => 'game', :action => 'index'
   match '/combat', :controller => 'combat', :action => 'index'
 

@@ -1,7 +1,12 @@
 function Game() {
-	this.actions = [ "discard", "draw", "move", "act", "cleanup" ];
-	this.currentAction = "";
-	this.currentPlayer = 0;
+	this.notStartedErrorMessage = "game not started";
+	this.parametersEmptyErrorMessage = "parameters empty";
+	this.wrongActionSentErrorMessage = "wrong action";
+	this.playerNotFound = "player not found";
+
+	this.actions = gameActions.actions;
+	this.currentActionIdx = 0;
+	this.currentPlayerIdx = 0;
 	this.players = [];
 	this.started = false;
 };
@@ -31,9 +36,20 @@ Game.prototype = {
 
 	startGame: function() {
 		if(this.canStartGame()) {
+
+			// generate cards for all players
+			var players = this.getPlayers();
+
+			// hard coding this dependency for now, should inject in the future
+			var generateCards = new GenerateCards();
+
+			for(var i = 0; i < players.length; i++) {
+				generateCards.generateCardsForPlayer(players[i], players);
+			}
+
 			this.started = true;
-			this.currentPlayer = 0;
-			this.currentAction = this.actions[0];
+			this.currentPlayerIdx = 0;
+			this.currentActionIdx = 0;
 		}
 	},
 
@@ -46,36 +62,61 @@ Game.prototype = {
 			return null;
 		}
 
-		var currentPlayerName = this.players[this.currentPlayer].name;
+		var currentPlayerName = this.players[this.currentPlayerIdx].name;
+		var currentAction = this.actions[this.currentActionIdx];
 
-		return new CurrentTurn(currentPlayerName, this.currentAction);
+		return new CurrentTurn(currentPlayerName, currentAction);
 	},
 
 	/* functions around discarding */
 
-	discard: function(discardParameters) {
-		if(discardParameters == null) {
-			return "parameters empty";
+	// returns an error message if actionParameters aren't valid
+	validateAction: function(actionParameters) {
+		if(!this.isStarted()) {
+			return this.notStartedErrorMessage;
 		}
 
-		if(this.currentAction != this.actions[0]) {
-			return "current action not discard";
+		if(actionParameters == null) {
+			return this.parametersEmptyErrorMessage;
 		}
 
+		if(this.actions[this.currentActionIdx] != actionParameters.getCurrentAction()) {
+			return this.wrongActionSentErrorMessage;
+		}
+
+		// we do this so we get the current index of the player
 		var player = this.players[this.currentPlayer];
 
-		if(player == null) {
-			return "error getting current player";
+		if(this.players[this.currentPlayerIdx].name != actionParameters.getPlayerName()) {
+			return this.playerNotFound;
 		}
+
+		return "";
 	},
 
 	// draw turn
+	discard: function(actionParameters) {
+		var errorMessage = this.validateAction(actionParameters);
+		
+		if(errorMessage.length > 0) {
+			return errorMessage;
+		}
+
+		var player = this.players[this.currentPlayerIdx];
+
+		// what if we had it built in that actionParameters knew what to do?
+		for(var i = 0; i < actionParameters.parameters.length; i++) {
+			player.discardCard(actionParameters.parameters[i]);
+		}
+
+		return "";
+	},
+
 	// move turn
 	// action turn
 	// cleanup turn
-
 	takeTurn: function() {
 		// cycle through each of the 
-		this.currentPlayer = ++this.currentPlayer % this.players.length;
+		this.currentPlayerIdx = ++this.currentPlayerIdx % this.players.length;
 	}
 };

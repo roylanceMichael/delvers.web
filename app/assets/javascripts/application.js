@@ -19,9 +19,13 @@
 
 /* this is the list of the order of files for dependencies! */
 
+/* ENUMS */
+//= require engine/messages/gameActions.js
+
 /* SERVICES/MODELS */
 //= require engine/cards/attackCard.js
 //= require engine/messages/currentTurn.js
+//= require engine/messages/actionParameters.js
 //= require engine/services/generateCards.js
 //= require engine/services/generateDamage.js
 //= require engine/services/targetRules/targetPlayers.js
@@ -44,3 +48,11 @@
 //= require ui/uiUtilities.js
 //= require ui/viewModels/mainViewModel.js
 //= require ui/viewModels/combatViewModel.js
+
+// instantiate enums...
+var bootStrap = function() {
+	// putting on the global namespace for now...
+	gameActions = new GameActions();
+}
+
+bootStrap();
