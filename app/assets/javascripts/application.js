@@ -48,11 +48,3 @@
 //= require ui/uiUtilities.js
 //= require ui/viewModels/mainViewModel.js
 //= require ui/viewModels/combatViewModel.js
-
-// instantiate enums...
-var bootStrap = function() {
-	// putting on the global namespace for now...
-	gameActions = new GameActions();
-}
-
-bootStrap();

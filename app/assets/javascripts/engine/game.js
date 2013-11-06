@@ -4,8 +4,7 @@ function Game() {
 	this.wrongActionSentErrorMessage = "wrong action";
 	this.playerNotFound = "player not found";
 
-	this.actions = gameActions.actions;
-	this.currentActionIdx = 0;
+	this.actions = new GameActions();
 	this.currentPlayerIdx = 0;
 	this.players = [];
 	this.started = false;
@@ -47,6 +46,7 @@ Game.prototype = {
 				generateCards.generateCardsForPlayer(players[i], players);
 			}
 
+			this.actions.reset();
 			this.started = true;
 			this.currentPlayerIdx = 0;
 			this.currentActionIdx = 0;
@@ -63,7 +63,7 @@ Game.prototype = {
 		}
 
 		var currentPlayerName = this.players[this.currentPlayerIdx].name;
-		var currentAction = this.actions[this.currentActionIdx];
+		var currentAction = this.actions.getCurrentState();
 
 		return new CurrentTurn(currentPlayerName, currentAction);
 	},
@@ -80,8 +80,12 @@ Game.prototype = {
 			return this.parametersEmptyErrorMessage;
 		}
 
-		if(this.actions[this.currentActionIdx] != actionParameters.getCurrentAction()) {
-			return this.wrongActionSentErrorMessage;
+		if(!this.actions.canAcceptState(actionParameters.getCurrentAction())) {
+			return this.wrongActionSentErrorMessage + 
+			" currently at -> " + 
+			this.actions.getCurrentState() + 
+			" received new state of -> " + 
+			actionParameters.getCurrentAction();
 		}
 
 		// we do this so we get the current index of the player
@@ -109,12 +113,59 @@ Game.prototype = {
 			player.discardCard(actionParameters.parameters[i]);
 		}
 
+		this.actions.acceptState(this.actions.discard);
+
+		return "";
+	},
+
+	draw: function(actionParameters) {
+		var errorMessage = this.validateAction(actionParameters);
+		
+		if(errorMessage.length > 0) {
+			return errorMessage;
+		}
+
+		var player = this.players[this.currentPlayerIdx];
+
+		player.moveDrawToInHand();
+
+		this.actions.acceptState(this.actions.draw)
+
+		return "";
+	},
+
+	use: function(actionParameters) {
+		var errorMessage = this.validateAction(actionParameters);
+		
+		if(errorMessage.length > 0) {
+			return errorMessage;
+		}
+
+		var player = this.players[this.currentPlayerIdx];
+
+		// we'll use all the cards the user sent us...
+		for(var i = 0; i < actionParameters.parameters.length; i++) {
+			var card = actionParameters.parameters[i];
+			player.useCard(card);
+		}
+
+		this.actions.acceptState(this.actions.attack);
+
 		return "";
 	},
 
 	// move turn
 	// action turn
 	// cleanup turn
+
+	skipAction: function() {
+		this.incrementAction();
+	},
+
+	incrementAction: function() {
+		this.actions.incrementAction();
+	},
+
 	takeTurn: function() {
 		// cycle through each of the 
 		this.currentPlayerIdx = ++this.currentPlayerIdx % this.players.length;

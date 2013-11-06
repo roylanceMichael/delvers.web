@@ -43,7 +43,7 @@ Player.prototype = {
 		}
 	},
 
-	moveDrawToInHand: function(numberOfCards) {
+	moveDrawToInHand: function() {
 		while(this.cardsInHand.length < 5 && this.drawCards.length > 0) {
 			this.cardsInHand.push(this.drawCards.splice(0, 1)[0]);
 		}
